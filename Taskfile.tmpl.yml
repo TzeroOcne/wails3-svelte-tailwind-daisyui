@@ -1,0 +1,61 @@
+version: '3'
+
+includes:
+  common: ./build/Taskfile.yml
+  windows: ./build/windows/Taskfile.yml
+  darwin: ./build/darwin/Taskfile.yml
+  linux: ./build/linux/Taskfile.yml
+
+vars:
+  APP_NAME: "{{.ProjectName}}"
+  BIN_DIR: "bin"
+  VITE_PORT: {{ "'{{.WAILS_VITE_PORT | default 9245}}'" }}
+
+tasks:
+  install:frontend:deps:
+    summary: Install frontend dependencies
+    dir: frontend
+    sources:
+      - package.json
+      - pnpm-lock.yaml
+    generates:
+      - node_modules/*
+    preconditions:
+      - sh: pnpm version
+        msg: "Looks like pnpm isn't installed"
+    cmds:
+      - pnpm install
+
+  build:frontend:
+    summary: Build the frontend project
+    dir: frontend
+    sources:
+      - "**/*"
+    generates:
+      - dist/*
+    deps:
+      - task: install:frontend:deps
+      - task: generate:bindings
+    cmds:
+      - pnpm run build -q
+
+  build:
+    summary: Builds the application
+    cmds:
+      - task: "{{ "{{OS}}" }}:build"
+
+  package:
+    summary: Packages a production build of the application
+    cmds:
+      - task: "{{ "{{OS}}" }}:package"
+
+  run:
+    summary: Runs the application
+    cmds:
+      - task: "{{ "{{OS}}" }}:run"
+
+  dev:
+    summary: Runs the application in development mode
+    cmds:
+      - wails3 dev -config ./build/config.yml -port {{ "{{.VITE_PORT}}" }}
+

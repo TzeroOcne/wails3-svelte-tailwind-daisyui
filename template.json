@@ -1,0 +1,9 @@
+{
+  "name": "PNPM + ESLint + Svelte (v5) + Tailwind (v4) + DaisyUI (v5)",
+  "shortname": "wails3-pnpm-eslint-svelte-tailwind-daisyui",
+  "author": "Tzero Ocne",
+  "description": "Wails template using PNPM, Svelte 5, Tailwind CSS 4 and DaisyUI 5",
+  "helpurl": "https://github.com/TzeroOcne/wails3-svelte-tailwind-daisyui",
+  "version": "v0.0.1",
+  "schema": 3
+}
